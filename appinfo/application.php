@@ -40,6 +40,8 @@ class Application extends App {
                 if (preg_match("%/apps/files(/.*)?%", $url)) {
                     Util::addScript($appName, "main");
                     Util::addStyle($appName, "main");
+                    Util::addScript($appName, "editor");
+                    Util::addStyle($appName, "editor");
                 }
             }
         }

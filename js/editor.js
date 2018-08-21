@@ -42,7 +42,7 @@
         var ncClient = OC.Files.getClient();
         ncClient.getFileInfo(filePath)
         .then(function (status, fileInfo) {
-            var url = OC.generateUrl("/apps/files/?dir={currentDirectory}&fileid={fileId}", {
+            var url = OC.generateUrl("/apps/files/?dir={currentDirectory}&", {
                 currentDirectory: fileInfo.path,
                 fileId: fileInfo.id
             });
