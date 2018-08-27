@@ -16,3 +16,12 @@ use OCP\App;
 App::registerAdmin("drawio", "settings");
 
 $app = new Application();
+
+$domains = \OC::$server->getConfig()->getSystemValue("https://test-drawio.cern.ch']);
+$policy = new \OCP\AppFramework\Http\EmptyContentSecurityPolicy();
+foreach($domains as $domain) {
+	$policy->addAllowedScriptDomain($domain);
+	$policy->addAllowedFrameDomain($domain);
+	$policy->addAllowedConnectDomain($domain);
+}
+\OC::$server->getContentSecurityPolicyManager()->addDefaultPolicy($policy);
