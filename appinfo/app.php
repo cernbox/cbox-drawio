@@ -17,7 +17,7 @@ App::registerAdmin("drawio", "settings");
 
 $app = new Application();
 
-$domains = \OC::$server->getConfig()->getSystemValue("drawio.domains", ["https://test-drawio.web.cern.ch"]);
+$domains = \OC::$server->getConfig()->getSystemValue("drawio.domains", ["https://test-drawio.web.cern.ch", "https://drawio.web.cern.ch"]);
 $policy = new \OCP\AppFramework\Http\EmptyContentSecurityPolicy();
 foreach($domains as $domain) {
 	$policy->addAllowedScriptDomain($domain);
