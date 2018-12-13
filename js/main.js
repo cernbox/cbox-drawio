@@ -122,9 +122,13 @@
 	var drawioUrl = OCA.DrawIO.Urls.drawioUrl;
 	var originUrl = OCA.DrawIO.Urls.originUrl;
 	
-	OCA.DrawIO.EditFile(iframe.contentWindow, filePath, originUrl);
+	OCA.DrawIO.EditFileWImport(iframe.contentWindow, filePath, originUrl);
 	iframe.setAttribute('src', drawioUrl);
     }
+
+    showDeprecatedVSD = function() {
+   	OC.Notification.showHtml("VSD support is deprecated, please click <a href='https://cern.service-now.com/service-portal/article.do?n=KB0005932'>here</a> to obtain more information", {type: "error", timeout: 10}); 
+    };
 
     OCA.DrawIO.FileList = {
         attach: function (fileList) {
@@ -138,8 +142,23 @@
                 OCA.DrawIO.Mimes = json.formats;
 		OCA.DrawIO.Urls = json.urls;
 
+                fileList.fileActions.setDefault("application/vsd", "showDeprecatedVSD");
+                fileList.fileActions.registerAction({
+                        name: "showDeprecatedVSD",
+                        displayName: t(OCA.DrawIO.AppName, "Open in Draw.io"),
+                                                        mime: "application/vsd",
+                                                        permissions: OC.PERMISSION_READ | OC.PERMISSION_UPDATE,
+                                                        icon: function () {
+                                                            return OC.imagePath(OCA.DrawIO.AppName, "btn-edit");
+                                                        },
+                                                        iconClass: "icon-drawio-xml",
+                                                        actionHandler: function (fileName, context) {
+								showDeprecatedVSD();
+                                                        }
+                    });
+
+
                 $.each(OCA.DrawIO.Mimes, function (ext, attr) {
-			console.log(attr.mime);
                     fileList.fileActions.registerAction({
                         name: "drawioOpen",
                         displayName: t(OCA.DrawIO.AppName, "Open in Draw.io"),
@@ -229,7 +248,9 @@ $(document)
             if ((($(this)
                 .attr("data-mime") == "text/xml; charset=utf-8") ||
                 ($(this)
-                .attr("data-mime") == "application/x-drawio")) && ($(this)
+                .attr("data-mime") == "application/x-drawio") || 
+                ($(this)
+                .attr("data-mime") == "application/vsd")) && ($(this)
                 .find("div.thumbnail")
                 .length > 0)) {
                 if ($(this)
@@ -248,7 +269,9 @@ $(document)
         .find("tr[data-type=file]")
         .each(function () {
             if (($(this)
-                .attr("data-mime") == "application/x-drawio") && ($(this)
+                .attr("data-mime") == "application/x-drawio") || 
+		($(this)
+                .attr("data-mime") == "application/vsd") && ($(this)
                 .find("div.thumbnail")
                 .length > 0)) {
                 if ($(this)

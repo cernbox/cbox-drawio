@@ -19,8 +19,6 @@
     <screenshot small-thumbnail="https://raw.githubusercontent.com/pawelrojek/nextcloud-drawio/master/screenshots/drawio_integration_sm.png">https://raw.githubusercontent.com/pawelrojek/nextcloud-drawio/master/screenshots/drawio_integration.png</screenshot>
     <bugs>https://github.com/pawelrojek/nextcloud-drawio/issues</bugs>
     <repository type="git">https://github.com/pawelrojek/nextcloud-drawio.git</repository>
-    <dependencies>
-    </dependencies>
     <settings>
         <admin>OCA\Drawio\Settings\AdminSettings</admin>
     </settings>
