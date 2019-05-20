@@ -119,8 +119,9 @@
        $('#content').html(iframeTemplate);
 
 	var iframe = $("#iframeEditor")[0];
-	var drawioUrl = OCA.DrawIO.Urls.drawioUrl;
-	var originUrl = OCA.DrawIO.Urls.originUrl;
+	// append username to iframe src for user tracking.
+	var drawioUrl = OCA.DrawIO.Urls.drawioUrl + "&username=" + OC.getCurrentUser().uid;
+	var originUrl = OCA.DrawIO.Urls.originUrl
 	
 	OCA.DrawIO.EditFileWImport(iframe.contentWindow, filePath, originUrl);
 	iframe.setAttribute('src', drawioUrl);
