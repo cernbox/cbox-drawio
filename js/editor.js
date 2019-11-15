@@ -155,7 +155,8 @@
                             if (contents === " ") {
                                 editWindow.postMessage(JSON.stringify({
                                     action: "template",
-                                    name: filePath
+                                    name: filePath,
+                                    callback: 1
                                 }), "*");
                             } else if (contents.indexOf("mxGraphModel") !== -1) {
                                 // TODO: show error to user
@@ -163,7 +164,8 @@
                             } else {
                                 editWindow.postMessage(JSON.stringify({
                                     action: "load",
-                                    xml: contents
+                                    xml: contents,
+                                    autosave: 1
                                 }), "*");
                             }
                         } else {
@@ -174,7 +176,8 @@
                                 editWindow.postMessage(JSON.stringify({
                                     action: "load", 
                                     title: fileToSave, 
-                                    xml: reader.result
+                                    xml: reader.result,
+                                    autosave: 1
                                 }), "*");
                             }
                             reader.readAsDataURL(blob);
@@ -188,6 +191,12 @@
                     .done(function () {
                         OC.Notification.hide(loadMsg);
                     });
+                } else if (payload.event === "template") {
+                    editWindow.postMessage(JSON.stringify({
+                        action: "load",
+                        xml: payload.xml,
+                        autosave: 1
+                    }), "*");
                 } else if (payload.event === "load") {
                     // TODO: notify user of loaded
                 } else if (payload.event === "export") {
@@ -210,6 +219,29 @@
                     })
                     .done(function () {
                         OC.Notification.hide(saveMsg);
+                    });
+                } else if (payload.event === "autosave") {
+                    var time = new Date();
+                    ncClient.putFileContents(
+                        fileToSave,
+                        payload.xml, {
+                            contentType: "x-application/drawio",
+                            overwrite: false
+                        }
+                    )
+                    .then(function (status) {
+                        editWindow.postMessage(JSON.stringify({
+                            action: 'status',
+                            message: "Autosave successful at " + time.toLocaleTimeString(),
+                            modified: false
+                        }), '*');
+                    })
+                    .fail(function (status) {
+                        editWindow.postMessage(JSON.stringify({
+                            action: 'status',
+                            message: "Autosave failed at " + time.toLocaleTimeString(),
+                            modified: false
+                        }), '*');
                     });
                 } else if (payload.event === "exit") {
                     OCA.DrawIO.Cleanup(receiver, filePath);
